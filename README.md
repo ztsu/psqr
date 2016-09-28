@@ -29,7 +29,7 @@ go get github.com/theairkit/psqr
 
 It's deadly simple:
 ```go
-// Define type, satisfying psqr.Sort interface:
+// Define type, satisfying psqr.Valuer interface:
 type Value float64
 func (value Value) Value()float64{
 	return float64(value)

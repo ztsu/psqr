@@ -11,8 +11,8 @@ import (
 
 const points = 5
 
-// Type, that satisfies psqr.Interface can be use as value for calculations
-type Interface interface {
+// Type, that satisfies psqr.Valuer can be use for calculations
+type Valuer interface {
 	Value() float64
 }
 
