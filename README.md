@@ -35,8 +35,8 @@ func (value Value) Value()float64{
 	return float64(value)
 }
 // Set percentile and create new psqr.PSQR:
-percentile:=0.95
-somePSQR:=psqr.New(percentile)
+quantile:=0.95
+somePSQR:=psqr.New(quantile)
 // Add next value:
 nextVal:=Value(12.34)
 psqr.AddValue(nextVal)
