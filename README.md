@@ -20,3 +20,25 @@ Instead of storing the complete distribution function,
 
 Today and now written on golang!
 
+Installation:
+```bash
+go get github.com/theairkit/psqr
+```
+
+### Description and examples:
+
+It's deadly simple:
+```go
+// Define type, satisfying psqr.Sort interface:
+type Value float64
+func (value Value) Value()float64{
+return float64(value)
+}
+// Set percentile and create new psqr.PSQR:
+percentile:=0.95
+somePSQR:=psqr.New(percentile)
+// Sdd next value:
+psqr.AddValue(value)
+// Get current quantile at any moment:
+quantile:=somePSQR.Percentile()
+```
