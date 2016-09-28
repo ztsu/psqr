@@ -20,7 +20,7 @@ Instead of storing the complete distribution function,
 
 Today and now written on golang!
 
-Installation:
+### Installation:
 ```bash
 go get github.com/theairkit/psqr
 ```
