@@ -32,7 +32,7 @@ It's deadly simple:
 // Define type, satisfying psqr.Sort interface:
 type Value float64
 func (value Value) Value()float64{
-return float64(value)
+	return float64(value)
 }
 // Set percentile and create new psqr.PSQR:
 percentile:=0.95
