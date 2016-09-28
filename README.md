@@ -2,7 +2,7 @@
 
 ### WIP
 
-The P^2 Algorithm for Dynamic Calculation of Quantiles and Histograms Without Storing Observations
+The P^2 Algorithm for Dynamic Calculation of Quantiles Without Storing Observations
 (http://www.cs.wustl.edu/~jain/papers/ftp/psqr.pdf)
 
 **How many data you can store on your machine?**
@@ -34,7 +34,7 @@ type Value float64
 func (value Value) Value()float64{
 	return float64(value)
 }
-// Set percentile and create new psqr.PSQR:
+// Set quantile and create new psqr.PSQR:
 quantile:=0.95
 somePSQR:=psqr.New(quantile)
 // Add next value:
