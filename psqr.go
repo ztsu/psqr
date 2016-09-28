@@ -29,7 +29,7 @@ type marker struct {
 type PSQR struct {
 	markers      [points]marker
 	observations int
-	percentile   float64
+	quantile     float64
 }
 
 func (psqr *PSQR) AddValue(data Interface) {
@@ -54,18 +54,18 @@ func (psqr *PSQR) init(data Interface) {
 		}
 	case 1:
 		psqr.markers[psqr.observations] = marker{
-			desiredPosition:  1 + 2*psqr.percentile,
-			desiredIncrement: psqr.percentile / 2,
+			desiredPosition:  1 + 2*psqr.quantile,
+			desiredIncrement: psqr.quantile / 2,
 		}
 	case 2:
 		psqr.markers[psqr.observations] = marker{
-			desiredPosition:  1 + 4*psqr.percentile,
-			desiredIncrement: psqr.percentile,
+			desiredPosition:  1 + 4*psqr.quantile,
+			desiredIncrement: psqr.quantile,
 		}
 	case 3:
 		psqr.markers[psqr.observations] = marker{
-			desiredPosition:  3 + 2*psqr.percentile,
-			desiredIncrement: (1 + psqr.percentile) / 2,
+			desiredPosition:  3 + 2*psqr.quantile,
+			desiredIncrement: (1 + psqr.quantile) / 2,
 		}
 	case 4:
 		psqr.markers[psqr.observations] = marker{
@@ -129,7 +129,7 @@ func (psqr *PSQR) linear(d float64, i int) float64 {
 	return 0.0
 }
 
-func (psqr *PSQR) Percentile() (float64, error) {
+func (psqr *PSQR) Quantile() (float64, error) {
 	if psqr.observations < 5 {
 		return 0.0, errors.New(
 			fmt.Sprintf(
@@ -140,10 +140,10 @@ func (psqr *PSQR) Percentile() (float64, error) {
 			),
 		)
 	}
-	return psqr.percentile, nil
+	return psqr.quantile, nil
 }
 
-func NewPSQR(percentile float64) *PSQR {
+func New(percentile float64) *PSQR {
 	return &PSQR{
 		[5]marker{},
 		0,

@@ -39,7 +39,7 @@ percentile:=0.95
 somePSQR:=psqr.New(percentile)
 // Add next value:
 nextVal:=Value(12.34)
-psqr.AddValue(value)
+psqr.AddValue(nextVal)
 // Get current quantile at any moment:
-quantile:=somePSQR.Percentile()
+quantile:=somePSQR.Quantile()
 ```
