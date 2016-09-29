@@ -18,7 +18,7 @@ Instead of storing the complete distribution function,
 
 **we store only five points on it and update the points as more observations are generated.**
 
-Today and now written on golang!
+Today and now written in golang!
 
 ### Installation:
 ```bash
