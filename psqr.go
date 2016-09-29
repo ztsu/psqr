@@ -6,7 +6,6 @@ package psqr
 import (
 	"errors"
 	"fmt"
-	"math"
 )
 
 const points = 5
@@ -32,7 +31,7 @@ type PSQR struct {
 	quantile     float64
 }
 
-func (psqr *PSQR) AddValue(data Interface) {
+func (psqr *PSQR) AddValue(data Valuer) {
 	if psqr.observations < points {
 		psqr.init(data)
 	} else {
@@ -41,11 +40,12 @@ func (psqr *PSQR) AddValue(data Interface) {
 	psqr.observations += 1
 }
 
-func (psqr *PSQR) init(data Interface) {
+func (psqr *PSQR) init(data Valuer) {
 	psqr.markers[psqr.observations] = marker{
 		height:         data.Value(),
 		actualPosition: psqr.observations + 1,
 	}
+
 	switch psqr.observations {
 	case 0:
 		psqr.markers[psqr.observations] = marker{
@@ -75,7 +75,7 @@ func (psqr *PSQR) init(data Interface) {
 	}
 }
 
-func (psqr *PSQR) addValue(data Interface) {
+func (psqr *PSQR) addValue(data Valuer) {
 	var cell int
 
 	switch {
@@ -95,38 +95,50 @@ func (psqr *PSQR) addValue(data Interface) {
 		cell = 4
 	}
 
-	for i := cell; i < len(psqr.markers); i++ {
+	fmt.Println(cell)
+	for i := cell; i < points; i++ {
 		psqr.markers[i].actualPosition += 1
 	}
-	for i := 0; i < len(psqr.markers); i++ {
-		psqr.markers[i].desiredPosition += psqr.markers[i].desiredIncrement
+	for i := 0; i < points; i++ {
+		psqr.markers[i].desiredPosition +=
+			psqr.markers[i].desiredIncrement
 	}
 
-	for i := 1; i < 4; i++ {
-		offset := psqr.markers[i].desiredPosition - float64(psqr.markers[i].actualPosition)
-		if (offset >= 1 && (psqr.markers[i+1].actualPosition-psqr.markers[i].actualPosition) > 1) ||
-			(offset <= -1 && (psqr.markers[i-1].actualPosition-psqr.markers[i].actualPosition < -1)) {
-			offset = math.Abs(offset)
-			height := psqr.parabolic(offset, i)
-			if psqr.markers[i-1].height < height &&
-				height < psqr.markers[i+1].height {
-				psqr.markers[i].height = height
-			} else {
-				psqr.markers[i].height = psqr.linear(offset, i)
-			}
-			psqr.markers[i].actualPosition = psqr.markers[i].actualPosition + int(offset)
+	for i := 1; i < points-1; i++ {
+		actualCurr := psqr.markers[i].actualPosition
+		actualNext := psqr.markers[i+1].actualPosition
+		actualPrev := psqr.markers[i-1].actualPosition
+		//heightNext := psqr.markers[i+1].height
+		//heightPrev := psqr.markers[i-1].height
+		desired := psqr.markers[i].desiredPosition
+		offset := desired - float64(actualCurr)
+
+		if (offset >= 1 && (actualNext-actualCurr) > 1) ||
+			(offset <= -1 && (actualPrev-actualCurr < -1)) {
+
+			offset := int(offset)
+			//height := psqr.parabolic(offset, i)
+			//if (height > heightPrev) && (height < heightNext) {
+			//	psqr.markers[i].height += height
+			//} else {
+			psqr.markers[i].height += psqr.linear(offset, i)
+			//}
+			psqr.markers[i].actualPosition += int(offset)
 		}
 	}
 }
 
-func (psqr *PSQR) parabolic(d float64, i int) float64 {
+func (psqr *PSQR) parabolic(d, i int) float64 {
 	// TODO:
 	return 0.0
 }
 
-func (psqr *PSQR) linear(d float64, i int) float64 {
-	// TODO:
-	return 0.0
+func (psqr *PSQR) linear(d, i int) float64 {
+	heightNext := psqr.markers[i+d].height
+	actualCurr := psqr.markers[i].actualPosition
+	actualNext := psqr.markers[i+d].actualPosition
+
+	return heightNext * float64(d/(actualNext-actualCurr))
 }
 
 func (psqr *PSQR) Quantile() (float64, error) {
@@ -140,13 +152,11 @@ func (psqr *PSQR) Quantile() (float64, error) {
 			),
 		)
 	}
-	return psqr.quantile, nil
+	return psqr.markers[3].height, nil
 }
 
-func New(percentile float64) *PSQR {
+func New(quantile float64) *PSQR {
 	return &PSQR{
-		[5]marker{},
-		0,
-		percentile,
+		quantile: quantile,
 	}
 }

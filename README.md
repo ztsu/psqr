@@ -12,7 +12,7 @@ The P^2 Algorithm for Dynamic Calculation of Quantiles Without Storing Observati
 The main problem is that all N observations must be stored.
 In many situations, N can be very large; also, there may be many variables whose quantiles may be required.
 
-**It is this space problem.**
+**It is a space problem.**
 
 Instead of storing the complete distribution function,
 
